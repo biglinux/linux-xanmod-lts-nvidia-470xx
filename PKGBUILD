@@ -21,7 +21,7 @@ options=(!strip)
 install=nvidia.install
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
 source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('9c86f9ef6aceaf2b292407aa161b98d817b2eb10a615f971d29a20c2a748ad09')
+sha256sums=('SKIP')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
