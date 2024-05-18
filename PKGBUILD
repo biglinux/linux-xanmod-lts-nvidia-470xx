@@ -1,15 +1,13 @@
 # Maintainer: Bernhard Landauer <bernhard@manjaro.org>
 # Maintainer: Philip Müller <philm[at]manjaro[dot]org>
-
-# Arch credits:
-# Maintainer : Thomas Baechler <thomas@archlinux.org>
+# Contributor: Thomas Baechler <thomas@archlinux.org>
 
 _linuxprefix=linux-xanmod-lts
 
 pkgname="${_linuxprefix}-nvidia-470xx"
 pkgdesc="NVIDIA drivers for linux"
 pkgver=470.239.06
-pkgrel=66301
+pkgrel=66311
 arch=('x86_64')
 url="http://www.nvidia.com/"
 license=('custom')
@@ -19,16 +17,28 @@ makedepends=("${_linuxprefix}-headers")
 provides=("nvidia=${pkgver}" 'NVIDIA-MODULE')
 options=(!strip)
 _durl="https://us.download.nvidia.com/XFree86/Linux-x86"
-source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run")
-sha256sums=('4a4b2f1a0e5f4403dcc94b5df9970cb064fccee44e82282e6f03dbde6e4dfff0')
+source=("${_durl}_64/${pkgver}/NVIDIA-Linux-x86_64-${pkgver}-no-compat32.run"
+        '0001-Fix-conftest-to-ignore-implicit-function-declaration.patch'
+        '0002-Fix-conftest-to-use-a-short-wchar_t.patch'
+        '0003-Fix-conftest-to-use-nv_drm_gem_vmap-which-has-the-se.patch')
+sha256sums=('4a4b2f1a0e5f4403dcc94b5df9970cb064fccee44e82282e6f03dbde6e4dfff0'
+            'e9df0c3c563466f7d747a3bf45900ba7804b072c899cde016e8d557e1921d60e'
+            '1181bef2128bd4d74b661164bed8a1eb19c917e68fedbcaf65a24a4c2638cb8f'
+            '84f3e59f2730752c0c4ef8bd2488953ccad13eb91a7f045488754e3bd61a1a6e')
 
 _pkg="NVIDIA-Linux-x86_64-${pkgver}-no-compat32"
 
 prepare() {
     sh "${_pkg}.run" --extract-only
 
-    cd "${_pkg}/kernel"
-    # patches here
+    cd "${_pkg}"
+
+    # GCC 14 patches
+    pushd kernel
+    patch -Np1 -i "${srcdir}"/0001-Fix-conftest-to-ignore-implicit-function-declaration.patch
+    patch -Np1 -i "${srcdir}"/0002-Fix-conftest-to-use-a-short-wchar_t.patch
+    patch -Np1 -i "${srcdir}"/0003-Fix-conftest-to-use-nv_drm_gem_vmap-which-has-the-se.patch
+    popd
 }
 
 build() {
